@@ -58,7 +58,7 @@ int main()
 void OPT(int ref[], int n, int page_frame)
 {
 	int total_page[100][100];
-	initArray(total_page);
+	initArray(total_page); // Khởi tạo mảng với giá trị mặc định là -1
 	int page_frame_current_position = 0;
 	number_page_fault =0;
 
@@ -71,8 +71,8 @@ void OPT(int ref[], int n, int page_frame)
 			continue;
 		}
 		
-		// Nếu page hết chỗ trống thì chọn 1 phần tử trong mảng total_page[position]
-		copyArray(total_page[position-1],total_page[position],page_frame); //copy từ mảng cũ sang mảng mới
+		// Nếu page hết chỗ trống:
+		copyArray(total_page[position-1],total_page[position],page_frame); //copy từ mảng trước sang mảng hiện tại
 		//Nếu phần tử cần lấy chưa có trong mảng total_page[position] thì
 		//chọn 1 victim và thay phần tử victim bằng phần tử cần lấy và tăng giá trị lỗi trang
 		if (notInArray(ref[position],total_page[position],page_frame)) { 
@@ -167,11 +167,15 @@ int victimPagePosition(int current_position, int total_page[100][100])
 	int nearest_reference_arr[100];
 	int victimPosition = 0;
 	int maxValue = 0;
-	// index nearest reference
+	// lưu vị trí xuất hiện tiếp theo của mảng total_page[current_position] vào mảng
+	// nearest_reference_arr 
 	for (int j=0; j < page_frame; j++) {
+		//nearest_reference tìm vị trí tiếp theo của phần tử trong mảng, nếu không có thì trả về 999
 		nearest_reference_arr[j] = nearest_reference(total_page[current_position][j],current_position);
 	}
-	// find victim position
+	// tìm và trả về vị trí của victim trong mảng nearest_reference_arr
+	// giá trị nào trong mảng nearest_reference_arr lớn nhất thì sẽ được chọn
+	// làm victim.
 	for (int i = 0; i < page_frame; i++) {
 		if ( nearest_reference_arr[i] > maxValue ) {
 			maxValue = nearest_reference_arr[i];
